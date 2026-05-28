@@ -3,7 +3,25 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "declaration": true,
-    "types": ["node"]
+    "types": ["node"],
+
+    // mf imports an internal rspack type via `@rspack/core/dist/sharing/SharePlugin`
+    // (a deep path NOT in @rspack/core's `exports` map). Bundler resolution
+    // refuses to follow non-exported subpaths, so override to `node` here --
+    // matches how the lib has always been compiled. The TS 7 deprecation is
+    // covered by tsconfig.base.json's `ignoreDeprecations: "6.0"`.
+    "moduleResolution": "node",
+
+    // See libs/native-federation/tsconfig.lib.json for the rationale.
+    // Restores TS 5.x-equivalent looseness to match upstream's
+    // commented-out `// "strict": true,` policy under TS 6's stricter
+    // defaults. Going past this baseline belongs in a separate PR.
+    "strict": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
+    "useUnknownInCatchVariables": false,
+    "noPropertyAccessFromIndexSignature": false
   },
   "include": ["**/*.ts"],
   "exclude": ["jest.config.ts", "**/*.spec.ts", "**/*.test.ts"]

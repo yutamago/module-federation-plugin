@@ -5,7 +5,17 @@
     "target": "ES2022",
     "outDir": "../../dist/out-tsc",
     "declaration": true,
-    "types": ["node"]
+    "types": ["node"],
+
+    // See libs/native-federation/tsconfig.lib.json for the rationale.
+    // Restores TS 5.x-equivalent looseness to match upstream's
+    // commented-out `// "strict": true,` policy under TS 6's stricter
+    // defaults. Going past this baseline belongs in a separate PR.
+    "strict": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "useUnknownInCatchVariables": false,
+    "noPropertyAccessFromIndexSignature": false
   },
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
   "include": [

@@ -7,7 +7,7 @@ export function createSharedMappingsPlugin(mappedPaths: MappedPath[]): Plugin {
     name: 'custom',
     setup(build: PluginBuild) {
       build.onResolve({ filter: /^[.]/ }, async (args) => {
-        let mappedPath: MappedPath | null = null;
+        let mappedPath: MappedPath | undefined = undefined;
         let isSelf = false;
 
         if (args.kind === 'import-statement') {

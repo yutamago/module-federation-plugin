@@ -356,10 +356,14 @@ async function runEsbuild(
       await pluginDisposed;
     }
     return writtenFiles;
-  } catch (error) {
+  } catch (error: unknown) {
     // ESBuild throws an error if the request is cancelled.
     // if it is, it's changed to an 'AbortedError'
-    if (signal?.aborted && error?.message?.includes('canceled')) {
+    if (
+      signal?.aborted &&
+      error instanceof Error &&
+      error.message.includes('canceled')
+    ) {
       throw new AbortedError('[runEsbuild] ESBuild was canceled.');
     }
     throw error;
@@ -448,9 +452,16 @@ function doesFileExistAndJsonEqual(path: string, content: string) {
 function writeResult(
   result: esbuild.BuildResult<esbuild.BuildOptions>,
   outdir: string,
-  memOnly: boolean,
+  memOnly: boolean | undefined,
 ) {
   const writtenFiles: string[] = [];
+
+  // esbuild typings: outputFiles is only defined when write: false (which
+  // runEsbuild always sets). Guard once so downstream loops don't carry the
+  // optional through.
+  if (!result.outputFiles) {
+    return writtenFiles;
+  }
 
   if (memOnly) {
     _memResultHandler(result.outputFiles, outdir);
@@ -473,13 +484,13 @@ function writeResult(
 }
 
 function registerForRebuilds(
-  kind: BuildKind,
+  kind: BuildKind | undefined,
   rebuildRequested: RebuildEvents,
   ctx: esbuild.BuildContext<esbuild.BuildOptions>,
   entryPoints: EntryPoint[],
   outdir: string,
   hash: boolean,
-  memOnly: boolean,
+  memOnly: boolean | undefined,
 ) {
   if (kind !== 'shared-package') {
     rebuildRequested.rebuild.register(async () => {

@@ -30,6 +30,14 @@ export function updateIndexHtml(
     .readdirSync(outputPath)
     .find((f) => f.startsWith('polyfills') && f.endsWith('.js'));
 
+  if (!mainName || !polyfillsName) {
+    console.error(
+      'Expected main*.js and polyfills*.js not found in output dir; skipping index.html update.',
+      { mainName, polyfillsName, outputPath },
+    );
+    return;
+  }
+
   let indexContent = fs.readFileSync(indexPath, 'utf-8');
 
   indexContent = updateScriptTags(

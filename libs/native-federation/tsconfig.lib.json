@@ -4,7 +4,26 @@
     "composite": true,
     "outDir": "../../dist/out-tsc",
     "declaration": true,
-    "types": ["node"]
+    "types": ["node"],
+
+    // Upstream's `tsconfig.json` has `// "strict": true,` commented out --
+    // the maintainers tried enabling strict once and reverted. The lib has
+    // always built strict-OFF. TypeScript 6.x tightens several defaults
+    // (catch-variable inference, closure narrowing, optional-chain narrowing
+    // to `never`, etc.) even when `strict: true` is not set. The flags below
+    // restore TS 5.x-equivalent looseness so the lib continues to compile
+    // under the version constraint Angular 22-rc imposes (`typescript >=6.0.0
+    // <6.1.0`). This is NOT a relaxation past upstream's policy --
+    // upstream-equivalent strictness, expressed explicitly for TS 6.
+    //
+    // Removing these would require ~50 source-level fixes across
+    // builder.ts, plugin/index.ts, schematics/*, etc. -- improvements that
+    // go BEYOND the upstream baseline and belong in a separate PR.
+    "strict": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "useUnknownInCatchVariables": false,
+    "noPropertyAccessFromIndexSignature": false
   },
   "include": ["**/*.ts", "**/*.js"],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]

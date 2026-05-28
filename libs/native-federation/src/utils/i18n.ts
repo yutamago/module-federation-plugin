@@ -103,8 +103,8 @@ function execCommand(cmd: string, defaultSuccessInfo: string) {
   try {
     const output = execSync(cmd);
     logger.info(output.toString() || defaultSuccessInfo);
-  } catch (error) {
-    logger.error(error.message);
+  } catch (error: unknown) {
+    logger.error(error instanceof Error ? error.message : String(error));
   }
 }
 

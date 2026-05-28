@@ -5,7 +5,18 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": []
+    "types": [],
+
+    // See libs/native-federation/tsconfig.lib.json for the rationale.
+    // Restores TS 5.x-equivalent looseness to match upstream's
+    // commented-out `// "strict": true,` policy under TS 6's stricter
+    // defaults. Going past this baseline belongs in a separate PR.
+    "strict": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
+    "useUnknownInCatchVariables": false,
+    "noPropertyAccessFromIndexSignature": false
   },
   "exclude": [
     "src/**/*.spec.ts",

@@ -65,6 +65,6 @@ export class MemResults {
   }
 }
 
-function unify(path) {
+function unify(path: string | undefined) {
   return path?.replace(/\\/g, '/');
 }

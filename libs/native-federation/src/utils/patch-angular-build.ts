@@ -5,7 +5,9 @@ export const privateEntrySrc = `
 exports = require('./src/private.js');
 `;
 
-export function patchAngularBuildPackageJson(packageJson: unknown): void {
+export function patchAngularBuildPackageJson(
+  packageJson: Record<string, unknown>,
+): void {
   const exportsMap = packageJson['exports'];
 
   if (!exportsMap) {
